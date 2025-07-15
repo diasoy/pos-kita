@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "./cart-context";
 import { Plus, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
 
 interface Category {
   id: number;
@@ -24,7 +23,7 @@ interface Product {
   price: number;
   category_id: number;
   image_url?: string;
-  stock?: number; // Make stock optional since it might not be in the database
+  stock?: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -115,13 +114,13 @@ export function ProductGrid() {
       name: product.name,
       price: product.price,
       category: product.category_id.toString(),
-      stock: product.stock || 99, // Default stock if not available
+      stock: product.stock || 99,
     });
   };
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Memuat produk...</p>
@@ -144,9 +143,9 @@ export function ProductGrid() {
   }
 
   return (
-    <div className="flex-1 space-y-6">
+    <div className="h-full flex flex-col p-6 space-y-6">
       {/* Search and Filters */}
-      <Card>
+      <Card className="shrink-0">
         <CardHeader>
           <CardTitle>Cari Produk</CardTitle>
         </CardHeader>
@@ -196,48 +195,49 @@ export function ProductGrid() {
       </Card>
 
       {/* Products Grid */}
-      <Card className="shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <span className="text-lg">Produk</span>
-              {selectedCategory !== "all" && (
-                <span className="text-sm font-normal text-muted-foreground">
-                  - {getCategoryName(selectedCategory)}
-                </span>
-              )}
-            </span>
-            <Badge variant="outline" className="px-3 py-1">
-              {filteredProducts.length} produk
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          {filteredProducts.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-muted-foreground">
-                <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-lg font-medium mb-2">
-                  {searchTerm ? "Produk tidak ditemukan" : "Belum ada produk"}
-                </h3>
-                <p className="text-sm">
-                  {searchTerm
-                    ? `Tidak ada produk yang cocok dengan pencarian "${searchTerm}"`
-                    : "Tidak ada produk dalam kategori ini"}
-                </p>
+      <div className="flex-1 overflow-hidden">
+        <Card className="shadow-sm h-full flex flex-col">
+          <CardHeader className="pb-4 shrink-0">
+            <CardTitle className="flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <span className="text-lg">Produk</span>
+                {selectedCategory !== "all" && (
+                  <span className="text-sm font-normal text-muted-foreground">
+                    - {getCategoryName(selectedCategory)}
+                  </span>
+                )}
+              </span>
+              <Badge variant="outline" className="px-3 py-1">
+                {filteredProducts.length} produk
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 flex-1 overflow-y-auto">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-muted-foreground">
+                  <div className="text-4xl mb-4">🔍</div>
+                  <h3 className="text-lg font-medium mb-2">
+                    {searchTerm ? "Produk tidak ditemukan" : "Belum ada produk"}
+                  </h3>
+                  <p className="text-sm">
+                    {searchTerm
+                      ? `Tidak ada produk yang cocok dengan pencarian "${searchTerm}"`
+                      : "Tidak ada produk dalam kategori ini"}
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {filteredProducts.map((product) => (
-                <Card
-                  key={product.id}
-                  className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-105 group"
-                >
-                  <div className="relative">
-                    {/* Product Image */}
-                    <div className="aspect-square relative overflow-hidden bg-gray-100">
-                      {/* {product.image_url ? (
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                {filteredProducts.map((product) => (
+                  <Card
+                    key={product.id}
+                    className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-105 group"
+                  >
+                    <div className="relative">
+                      {/* Product Image */}
+                      <div className="aspect-square relative overflow-hidden bg-gray-100">
+                        {/* {product.image_url ? (
                         <Image
                           src={product.image_url}
                           alt={product.name}
@@ -256,82 +256,81 @@ export function ProductGrid() {
                         </div>
                       )} */}
 
-                      {/* Stock Badge */}
-                      {product.stock &&
-                        product.stock <= 5 &&
-                        product.stock > 0 && (
-                          <div className="absolute top-2 left-2">
-                            <Badge variant="destructive" className="text-xs">
-                              Stok Sedikit
+                        {/* Stock Badge */}
+                        {product.stock &&
+                          product.stock <= 5 &&
+                          product.stock > 0 && (
+                            <div className="absolute top-2 left-2">
+                              <Badge variant="destructive" className="text-xs">
+                                Stok Sedikit
+                              </Badge>
+                            </div>
+                          )}
+
+                        {product.stock === 0 && (
+                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <Badge variant="destructive" className="text-sm">
+                              Habis
                             </Badge>
                           </div>
                         )}
+                      </div>
 
-                      {product.stock === 0 && (
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                          <Badge variant="destructive" className="text-sm">
-                            Habis
+                      {/* Product Info */}
+                      <CardContent className="p-3">
+                        <div className="space-y-2">
+                          {/* Category Badge */}
+                          <Badge variant="outline" className="text-xs">
+                            {getCategoryName(product.category_id)}
                           </Badge>
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Product Info */}
-                    <CardContent className="p-3">
-                      <div className="space-y-2">
-                        {/* Category Badge */}
-                        <Badge variant="outline" className="text-xs">
-                          {getCategoryName(product.category_id)}
-                        </Badge>
+                          {/* Product Name */}
+                          <h4 className="font-semibold text-sm line-clamp-2 min-h-[2.5rem]">
+                            {product.name}
+                          </h4>
 
-                        {/* Product Name */}
-                        <h4 className="font-semibold text-sm line-clamp-2 min-h-[2.5rem]">
-                          {product.name}
-                        </h4>
-
-                        {/* Description */}
-                        {product.description && (
+                          {/* Description */}
+                          {/* {product.description && (
                           <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">
                             {product.description}
                           </p>
-                        )}
+                        )} */}
 
-                        {/* Price and Stock */}
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-green-600 text-sm">
-                              Rp {product.price.toLocaleString()}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
+                          {/* Price and Stock */}
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-green-600 text-sm">
+                                Rp {product.price.toLocaleString()}
+                              </span>
+                              {/* <span className="text-xs text-muted-foreground">
                               Stok: {product.stock || "Tersedia"}
-                            </span>
-                          </div>
+                            </span> */}
+                            </div>
 
-                          {/* Add to Cart Button */}
-                          <Button
-                            size="sm"
-                            className="w-full"
-                            onClick={() => handleAddToCart(product)}
-                            disabled={product.stock === 0}
-                            variant={
-                              product.stock === 0 ? "outline" : "default"
-                            }
-                          >
-                            <Plus className="h-3 w-3 mr-1" />
-                            {product.stock === 0
-                              ? "Habis"
-                              : "Tambah"}
-                          </Button>
+                            {/* Add to Cart Button */}
+                            <Button
+                              size="sm"
+                              className="w-full"
+                              onClick={() => handleAddToCart(product)}
+                              disabled={product.stock === 0}
+                              variant={
+                                product.stock === 0 ? "outline" : "default"
+                              }
+                            >
+                              <Plus className="h-3 w-3 mr-1" />
+                              {product.stock === 0 ? "Habis" : "Tambah"}
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                      </CardContent>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

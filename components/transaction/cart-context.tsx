@@ -30,16 +30,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Nasi Goreng",
-      price: 15000,
-      quantity: 2,
-      category: "Makanan",
-    },
-    { id: 2, name: "Es Teh", price: 5000, quantity: 1, category: "Minuman" },
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const addToCart = (product: Product) => {
     setCartItems((items) => {

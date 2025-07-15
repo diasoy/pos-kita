@@ -25,11 +25,11 @@ export function Header() {
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <header className="border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur">
       <div className="flex h-16 items-center px-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button variant="ghost" size="icon">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
@@ -62,42 +62,11 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="ml-4 md:ml-0">
+        <div className="ml-4">
           <h1 className="text-xl font-semibold">POS KITA</h1>
         </div>
 
         <div className="ml-auto flex items-center space-x-4">
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
-            <Link
-              href="/product"
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Package className="h-4 w-4" />
-              Product
-            </Link>
-            <Link
-              href="/transaction"
-              className="flex items-center gap-2 text-sm font-medium text-foreground"
-            >
-              <History className="h-4 w-4" />
-              History
-            </Link>
-            <Link
-              href="/settings"
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Settings className="h-4 w-4" />
-              Settings
-            </Link>
-          </nav>
-
           {/* Cart badge */}
           <div className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5 text-gray-600" />

@@ -12,7 +12,7 @@ export default function TransactionLayout({
     <CartProvider>
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="p-6">{children}</main>
+        <main>{children}</main>
       </div>
     </CartProvider>
   );
