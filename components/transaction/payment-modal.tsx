@@ -48,7 +48,8 @@ export function PaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const cashValue = parseFloat(cashAmount) || 0;
+  // Parse cashValue from formatted string
+  const cashValue = parseFloat(cashAmount.replace(/[^0-9]/g, "")) || 0;
   const change = cashValue - finalTotal;
 
   const handlePayment = async () => {
@@ -191,17 +192,61 @@ export function PaymentModal({
                 <div>
                   <Label htmlFor="cash-amount">Jumlah Uang Diterima</Label>
                   <Input
-                  id="cash-amount"
-                  type="text"
-                  placeholder="Rp 0"
-                  value={cashAmount}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, '');
-                    const formattedValue = value ? `Rp ${parseInt(value).toLocaleString()}` : '';
-                    setCashAmount(formattedValue);
-                  }}
-                  className="mt-1"
+                    id="cash-amount"
+                    type="text"
+                    placeholder="Rp 0"
+                    value={cashAmount}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, "");
+                      if (value === "") {
+                        setCashAmount("");
+                      } else {
+                        const formattedValue = `Rp ${parseInt(
+                          value
+                        ).toLocaleString()}`;
+                        setCashAmount(formattedValue);
+                      }
+                    }}
+                    className="mt-1"
                   />
+                </div>
+
+                {/* Quick Amount Buttons */}
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCashAmount(`Rp ${finalTotal.toLocaleString()}`)
+                    }
+                  >
+                    Pas
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCashAmount(
+                        `Rp ${(100000).toLocaleString()}`
+                      )
+                    }
+                  >
+                    100k
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCashAmount(
+                        `Rp ${(200000).toLocaleString()}`
+                      )
+                    }
+                  >
+                    200k
+                  </Button>
                 </div>
                 {cashValue > 0 && (
                   <div className="p-3 bg-gray-50 rounded-lg">
