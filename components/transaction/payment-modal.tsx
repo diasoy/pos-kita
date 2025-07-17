@@ -178,6 +178,7 @@ export function PaymentModal({
                 variant={paymentMethod === "card" ? "default" : "outline"}
                 onClick={() => setPaymentMethod("card")}
                 className="flex items-center gap-2"
+                disabled
               >
                 <CreditCard className="h-4 w-4" />
                 Kartu
@@ -190,12 +191,16 @@ export function PaymentModal({
                 <div>
                   <Label htmlFor="cash-amount">Jumlah Uang Diterima</Label>
                   <Input
-                    id="cash-amount"
-                    type="number"
-                    placeholder="0"
-                    value={cashAmount}
-                    onChange={(e) => setCashAmount(e.target.value)}
-                    className="mt-1"
+                  id="cash-amount"
+                  type="text"
+                  placeholder="Rp 0"
+                  value={cashAmount}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    const formattedValue = value ? `Rp ${parseInt(value).toLocaleString()}` : '';
+                    setCashAmount(formattedValue);
+                  }}
+                  className="mt-1"
                   />
                 </div>
                 {cashValue > 0 && (

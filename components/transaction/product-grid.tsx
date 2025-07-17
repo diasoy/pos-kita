@@ -5,9 +5,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCart } from "./cart-context";
-import { Plus, Search } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Menu,
+  Home,
+  Package,
+  History,
+  Settings,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Category {
   id: number;
@@ -37,7 +55,9 @@ export function ProductGrid() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
+
+  const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
     fetchCategoriesAndProducts();
@@ -143,11 +163,72 @@ export function ProductGrid() {
   }
 
   return (
-    <div className="h-full flex flex-col p-6 space-y-6">
+    <div className="p-6 space-y-6">
       {/* Search and Filters */}
       <Card className="shrink-0">
         <CardHeader>
-          <CardTitle>Cari Produk</CardTitle>
+          <CardTitle className="flex items-center gap-4">
+            {/* Hamburger Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard" className="flex items-center gap-2">
+                    <Home className="h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/product" className="flex items-center gap-2">
+                    <Package className="h-4 w-4" />
+                    Product
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/transaction" className="flex items-center gap-2">
+                    <History className="h-4 w-4" />
+                    History
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/settings" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <span>Cari Produk</span>
+
+            <div className="ml-auto hidden lg:flex items-center gap-4">
+              {/* Cart Info */}
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-gray-600" />
+                <Badge variant="secondary" className="min-w-[20px]">
+                  {itemCount}
+                </Badge>
+              </div>
+
+              {/* User menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                    <span className="sr-only">User menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Search */}
@@ -195,9 +276,9 @@ export function ProductGrid() {
       </Card>
 
       {/* Products Grid */}
-      <div className="flex-1 overflow-hidden">
-        <Card className="shadow-sm h-full flex flex-col">
-          <CardHeader className="pb-4 shrink-0">
+      <div className="pb-6">
+        <Card className="shadow-sm">
+          <CardHeader className="pb-4">
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <span className="text-lg">Produk</span>
@@ -212,7 +293,7 @@ export function ProductGrid() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0 flex-1 overflow-y-auto">
+          <CardContent className="pt-0">
             {filteredProducts.length === 0 ? (
               <div className="text-center py-16">
                 <div className="text-muted-foreground">
@@ -228,50 +309,29 @@ export function ProductGrid() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredProducts.map((product) => (
                   <Card
                     key={product.id}
-                    className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-105 group"
+                    className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-105 group cursor-pointer"
+                    onClick={() =>
+                      product.stock !== 0 && handleAddToCart(product)
+                    }
                   >
                     <div className="relative">
                       {/* Product Image */}
                       <div className="aspect-square relative overflow-hidden bg-gray-100">
-                        {/* {product.image_url ? (
-                        <Image
-                          src={product.image_url}
-                          alt={product.name}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-200"
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop";
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                          <span className="text-gray-400 text-sm">
-                            No Image
-                          </span>
-                        </div>
-                      )} */}
-
-                        {/* Stock Badge */}
-                        {product.stock &&
-                          product.stock <= 5 &&
-                          product.stock > 0 && (
-                            <div className="absolute top-2 left-2">
-                              <Badge variant="destructive" className="text-xs">
-                                Stok Sedikit
-                              </Badge>
-                            </div>
-                          )}
-
-                        {product.stock === 0 && (
-                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                            <Badge variant="destructive" className="text-sm">
-                              Habis
-                            </Badge>
+                        {product.image_url ? (
+                          <Image
+                            src={product.image_url}
+                            alt={product.name}
+                            fill
+                            className="object-cover transition-transform duration-200 group-hover:scale-110"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <Package className="h-12 w-12 text-gray-400" />
                           </div>
                         )}
                       </div>
@@ -289,29 +349,22 @@ export function ProductGrid() {
                             {product.name}
                           </h4>
 
-                          {/* Description */}
-                          {/* {product.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">
-                            {product.description}
-                          </p>
-                        )} */}
-
                           {/* Price and Stock */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
                               <span className="font-bold text-green-600 text-sm">
                                 Rp {product.price.toLocaleString()}
                               </span>
-                              {/* <span className="text-xs text-muted-foreground">
-                              Stok: {product.stock || "Tersedia"}
-                            </span> */}
                             </div>
 
                             {/* Add to Cart Button */}
                             <Button
                               size="sm"
                               className="w-full"
-                              onClick={() => handleAddToCart(product)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(product);
+                              }}
                               disabled={product.stock === 0}
                               variant={
                                 product.stock === 0 ? "outline" : "default"

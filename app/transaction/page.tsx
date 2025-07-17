@@ -21,15 +21,13 @@ const TransactionPage = () => {
   };
 
   return (
-    <div className="flex h-screen pt-16">
-      <div className="flex-1 pr-96 h-full overflow-hidden">
-        <div className="h-full">
-          <ProductGrid />
-        </div>
+    <div className="flex flex-col lg:flex-row h-screen">
+      <div className="flex-1 lg:pr-96 overflow-auto">
+        <ProductGrid />
       </div>
-      {/* Shopping Cart - Right Side (Fixed Position) */}
-      <div className="fixed right-0 top-16 w-96 h-[calc(100vh-64px) z-10 border-l shadow-lg">
-        <Card className="h-full flex flex-col border-0 rounded-none">
+      {/* Shopping Cart - Right Side (Fixed on desktop, bottom on mobile) */}
+      <div className="w-full lg:fixed lg:right-0 lg:top-0 lg:w-96 lg:h-screen lg:z-10 lg:border-l lg:shadow-lg">
+        <Card className="h-full flex flex-col border-0 lg:rounded-none">
           <CardHeader className="pb-4 border-b">
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-2">
@@ -40,7 +38,7 @@ const TransactionPage = () => {
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="flex-1 flex flex-col p-0 min-h-0">
+          <CardContent className="flex-1 flex flex-col p-0 min-h-0 max-h-96 lg:max-h-none">
             {/* Cart Items - Scrollable Area */}
             <div className="flex-1 overflow-y-auto min-h-0">
               <div className="p-6 space-y-3">
@@ -54,10 +52,7 @@ const TransactionPage = () => {
                   </div>
                 ) : (
                   cartItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="border rounded-lg p-3"
-                    >
+                    <div key={item.id} className="border rounded-lg p-3">
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex-1 min-w-0">
                           <h4 className="font-medium text-sm leading-tight truncate">
@@ -119,7 +114,7 @@ const TransactionPage = () => {
 
             {/* Cart Summary - Fixed at Bottom */}
             {cartItems.length > 0 && (
-              <div className="border-t p-4 space-y-3 shrink-0">
+              <div className="border-t p-4 space-y-3 shrink-0 bg-white lg:bg-transparent">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal:</span>
@@ -139,20 +134,20 @@ const TransactionPage = () => {
 
                 <div className="space-y-2 pt-2">
                   <Button
-                    className="w-full"
-                    size="sm"
-                    onClick={() => setShowPaymentModal(true)}
-                  >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Proses Pembayaran
-                  </Button>
-                  <Button
                     variant="outline"
                     className="w-full"
                     size="sm"
                     onClick={clearCart}
                   >
                     Kosongkan Keranjang
+                  </Button>
+                  <Button
+                    className="w-full py-5"
+                    size="lg"
+                    onClick={() => setShowPaymentModal(true)}
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Proses Pembayaran
                   </Button>
                 </div>
               </div>
