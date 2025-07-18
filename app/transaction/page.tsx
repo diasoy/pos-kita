@@ -21,26 +21,32 @@ const TransactionPage = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Product Grid - Main Content Area */}
       <div className="flex-1 lg:pr-96 overflow-auto">
-        <ProductGrid />
+        <div className="container mx-auto max-w-7xl px-4 py-6">
+          <ProductGrid />
+        </div>
       </div>
+
       {/* Shopping Cart - Right Side (Fixed on desktop, bottom on mobile) */}
-      <div className="w-full lg:fixed lg:right-0 lg:top-0 lg:w-96 lg:h-screen lg:z-10 lg:border-l lg:shadow-lg">
-        <Card className="h-full flex flex-col border-0 lg:rounded-none">
-          <CardHeader className="pb-4 border-b">
-            <CardTitle className="flex items-center justify-between">
+      <div className="w-full lg:fixed lg:right-0 lg:top-0 lg:w-96 lg:h-screen lg:z-10">
+        <Card className="h-full flex flex-col border-0 lg:rounded-none floating-card transform-none hover:transform-none">
+          <CardHeader className="pb-4 glass-header border-b-0 shrink-0">
+            <CardTitle className="flex items-center justify-between text-foreground">
               <span className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
                 Keranjang
               </span>
-              <Badge variant="secondary">{cartItems.length} item</Badge>
+              <Badge variant="secondary" className="glass-light border-border">
+                {cartItems.length} item
+              </Badge>
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="flex-1 flex flex-col p-0 min-h-0 max-h-96 lg:max-h-none">
+          <CardContent className="flex-1 flex flex-col p-0 min-h-0 overflow-hidden">
             {/* Cart Items - Scrollable Area */}
-            <div className="flex-1 overflow-y-auto min-h-0">
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
               <div className="p-6 space-y-3">
                 {cartItems.length === 0 ? (
                   <div className="text-center text-muted-foreground py-8">
@@ -58,9 +64,6 @@ const TransactionPage = () => {
                           <h4 className="font-medium text-sm leading-tight truncate">
                             {item.name}
                           </h4>
-                          <Badge variant="outline" className="text-xs mt-1">
-                            {item.category}
-                          </Badge>
                         </div>
                         <Button
                           variant="ghost"
@@ -73,7 +76,7 @@ const TransactionPage = () => {
                       </div>
 
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-green-600 font-semibold">
+                        <span className="text-sm font-semibold">
                           Rp {item.price.toLocaleString()}
                         </span>
 
@@ -114,19 +117,19 @@ const TransactionPage = () => {
 
             {/* Cart Summary - Fixed at Bottom */}
             {cartItems.length > 0 && (
-              <div className="border-t p-4 space-y-3 shrink-0 bg-white lg:bg-transparent">
+              <div className="glass-strong rounded-t-2xl p-4 space-y-3 shrink-0 border-t border-border mt-auto">
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Subtotal:</span>
                     <span>Rp {total.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Pajak (10%):</span>
                     <span>Rp {tax.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between font-semibold text-base border-t pt-2">
+                  <div className="flex justify-between font-semibold text-base border-t border-border pt-2">
                     <span>Total:</span>
-                    <span className="text-green-600">
+                    <span className="text-foreground">
                       Rp {finalTotal.toLocaleString()}
                     </span>
                   </div>
@@ -135,14 +138,14 @@ const TransactionPage = () => {
                 <div className="space-y-2 pt-2">
                   <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full transform-none hover:transform-none"
                     size="sm"
                     onClick={clearCart}
                   >
                     Kosongkan Keranjang
                   </Button>
                   <Button
-                    className="w-full py-5"
+                    className="w-full py-5 transform-none hover:transform-none"
                     size="lg"
                     onClick={() => setShowPaymentModal(true)}
                   >

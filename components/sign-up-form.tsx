@@ -40,11 +40,14 @@ export function SignUpForm({
     }
 
     try {
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://pos-kita-bice.vercel.app' 
+        : window.location.origin;
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/transaction`,
+          emailRedirectTo: `${baseUrl}/transaction`,
         },
       });
       if (error) throw error;

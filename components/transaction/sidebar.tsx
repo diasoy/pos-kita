@@ -36,9 +36,9 @@ export function Sidebar() {
       : products.filter((product) => product.category === selectedCategory);
 
   return (
-    <div className="w-80 border-r bg-gray-50/50 p-4 space-y-4">
+    <div className="w-80 border-r glass-light backdrop-blur-lg p-4 space-y-4">
       {/* Categories */}
-      <Card>
+      <Card className="glass-card border-0">
         <CardHeader>
           <CardTitle className="text-lg">Kategori</CardTitle>
         </CardHeader>

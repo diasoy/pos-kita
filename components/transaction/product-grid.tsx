@@ -5,23 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { useCart } from "./cart-context";
 import {
   Plus,
   Search,
-  Menu,
   Home,
   Package,
-  History,
-  Settings,
+  // History,
+  // Settings,
   ShoppingCart,
-  User,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -163,70 +156,55 @@ export function ProductGrid() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Search and Filters */}
-      <Card className="shrink-0">
+      <Card className="shrink-0 floating-card border-0 transform-none hover:transform-none">
         <CardHeader>
-          <CardTitle className="flex items-center gap-4">
-            {/* Hamburger Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link href="/" className="flex items-center gap-2">
-                    <Home className="h-4 w-4" />
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/product" className="flex items-center gap-2">
-                    <Package className="h-4 w-4" />
-                    Product
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/transaction" className="flex items-center gap-2">
-                    <History className="h-4 w-4" />
-                    History
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <span>Cari Produk</span>
+          <CardTitle className="flex items-center justify-between text-foreground">
+            <div className="flex items-center gap-4">
+              <nav className="flex items-center space-x-6 flex-1">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                >
+                  <Home className="h-4 w-4" />
+                  Dashboard
+                </Link>
+                {/* <Link
+                  href="/product"
+                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                >
+                  <Package className="h-4 w-4" />
+                  Product
+                </Link>
+                <Link
+                  href="/transaction"
+                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                >
+                  <History className="h-4 w-4" />
+                  Transaction
+                </Link>
+                <Link
+                  href="/settings"
+                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                >
+                  <Settings className="h-4 w-4" />
+                  Settings
+                </Link> */}
+              </nav>
+            </div>
 
-            <div className="ml-auto hidden lg:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-4">
               {/* Cart Info */}
               <div className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-gray-600" />
-                <Badge variant="secondary" className="min-w-[20px]">
+                <ShoppingCart className="h-5 w-5" />
+                <Badge
+                  variant="secondary"
+                  className="min-w-[20px] glass-light border-border"
+                >
                   {itemCount}
                 </Badge>
               </div>
-
-              {/* User menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <User className="h-5 w-5" />
-                    <span className="sr-only">User menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </CardTitle>
         </CardHeader>
@@ -238,7 +216,7 @@ export function ProductGrid() {
               placeholder="Cari produk..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 glass-light border-border"
             />
           </div>
 
@@ -248,10 +226,17 @@ export function ProductGrid() {
               variant={selectedCategory === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory("all")}
-              className="flex items-center gap-2"
+              className={`flex items-center gap-2 ${
+                selectedCategory === "all"
+                  ? "glass-strong"
+                  : "glass-light border-border"
+              }`}
             >
               Semua
-              <Badge variant="secondary" className="text-xs">
+              <Badge
+                variant="secondary"
+                className="text-xs glass-light border-border bg-white dark:bg-gray-800"
+              >
                 {products.length}
               </Badge>
             </Button>
@@ -263,10 +248,17 @@ export function ProductGrid() {
                 }
                 size="sm"
                 onClick={() => setSelectedCategory(category.id)}
-                className="flex items-center gap-2"
+                className={`flex items-center gap-2 ${
+                  selectedCategory === category.id
+                    ? "glass-strong"
+                    : "glass-light border-border"
+                }`}
               >
                 {category.name}
-                <Badge variant="secondary" className="text-xs">
+                <Badge
+                  variant="secondary"
+                  className="text-xs glass-light border-border bg-white dark:bg-gray-800"
+                >
                   {getCategoryCount(category.id)}
                 </Badge>
               </Button>
@@ -277,9 +269,9 @@ export function ProductGrid() {
 
       {/* Products Grid */}
       <div className="pb-6">
-        <Card className="shadow-sm">
+        <Card className="shadow-sm floating-card border-0 transform-none hover:transform-none">
           <CardHeader className="pb-4">
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-foreground">
               <span className="flex items-center gap-2">
                 <span className="text-lg">Produk</span>
                 {selectedCategory !== "all" && (
@@ -288,7 +280,10 @@ export function ProductGrid() {
                   </span>
                 )}
               </span>
-              <Badge variant="outline" className="px-3 py-1">
+              <Badge
+                variant="outline"
+                className="px-3 py-1 glass-light border-border"
+              >
                 {filteredProducts.length} produk
               </Badge>
             </CardTitle>
@@ -309,11 +304,11 @@ export function ProductGrid() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 {filteredProducts.map((product) => (
                   <Card
                     key={product.id}
-                    className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:scale-105 group cursor-pointer"
+                    className="overflow-hidden floating-card border-0 transition-all duration-300 group cursor-pointer transform-none hover:scale-105"
                     onClick={() =>
                       product.stock !== 0 && handleAddToCart(product)
                     }
@@ -345,14 +340,14 @@ export function ProductGrid() {
                           </Badge>
 
                           {/* Product Name */}
-                          <h4 className="font-semibold text-sm line-clamp-2 min-h-[2.5rem]">
+                          <h4 className="font-semibold text-sm">
                             {product.name}
                           </h4>
 
                           {/* Price and Stock */}
                           <div className="space-y-2">
                             <div className="flex justify-between items-center">
-                              <span className="font-bold text-green-600 text-sm">
+                              <span className="font-bold text-sm">
                                 Rp {product.price.toLocaleString()}
                               </span>
                             </div>

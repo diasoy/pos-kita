@@ -80,16 +80,18 @@ export function PaymentModal({
   if (isSuccess) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md glass-strong border-0 force-center">
           <div className="flex flex-col items-center justify-center py-8">
-            <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Pembayaran Berhasil!</h3>
-            <p className="text-muted-foreground text-center">
+            <CheckCircle className="h-16 w-16 text-green-400 mb-4" />
+            <h3 className="text-xl font-semibold mb-2 text-white">
+              Pembayaran Berhasil!
+            </h3>
+            <p className="text-gray-200 text-center">
               Transaksi telah diproses dengan sukses
             </p>
             {paymentMethod === "cash" && change > 0 && (
-              <div className="mt-4 p-4 bg-green-50 rounded-lg">
-                <p className="text-sm text-green-700">
+              <div className="mt-4 p-4 glass-light rounded-lg">
+                <p className="text-sm text-green-400">
                   Kembalian:{" "}
                   <span className="font-semibold">
                     Rp {change.toLocaleString()}
@@ -105,13 +107,13 @@ export function PaymentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl glass-strong border-0 force-center">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-white">
             <Receipt className="h-5 w-5" />
             Proses Pembayaran
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-200">
             Pilih metode pembayaran dan konfirmasi transaksi
           </DialogDescription>
         </DialogHeader>
@@ -119,8 +121,8 @@ export function PaymentModal({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Order Summary */}
           <div className="space-y-4">
-            <h4 className="font-medium">Ringkasan Pesanan</h4>
-            <Card>
+            <h4 className="font-medium text-white">Ringkasan Pesanan</h4>
+            <Card className="glass-light border-0 transform-none hover:transform-none">
               <CardContent className="p-4">
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {cartItems.map((item) => (
@@ -129,32 +131,29 @@ export function PaymentModal({
                       className="flex justify-between items-center text-sm"
                     >
                       <div>
-                        <span className="font-medium">{item.name}</span>
-                        <span className="text-muted-foreground">
-                          {" "}
-                          x{item.quantity}
+                        <span className="font-medium text-white">
+                          {item.name}
                         </span>
+                        <span className="text-gray-300"> x{item.quantity}</span>
                       </div>
-                      <span>
+                      <span className="text-white">
                         Rp {(item.price * item.quantity).toLocaleString()}
                       </span>
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-2 mt-2 space-y-1">
-                  <div className="flex justify-between text-sm">
+                <div className="border-t border-white/20 pt-2 mt-2 space-y-1">
+                  <div className="flex justify-between text-sm text-gray-200">
                     <span>Subtotal:</span>
                     <span>Rp {total.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm text-gray-200">
                     <span>Pajak (10%):</span>
                     <span>Rp {tax.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between font-semibold">
+                  <div className="flex justify-between font-semibold text-white">
                     <span>Total:</span>
-                    <span className="text-green-600">
-                      Rp {finalTotal.toLocaleString()}
-                    </span>
+                    <span>Rp {finalTotal.toLocaleString()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -163,14 +162,14 @@ export function PaymentModal({
 
           {/* Payment Method */}
           <div className="space-y-4">
-            <h4 className="font-medium">Metode Pembayaran</h4>
+            <h4 className="font-medium text-white">Metode Pembayaran</h4>
 
             {/* Payment Method Selection */}
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant={paymentMethod === "cash" ? "default" : "outline"}
                 onClick={() => setPaymentMethod("cash")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 transform-none hover:transform-none"
               >
                 <Banknote className="h-4 w-4" />
                 Tunai
@@ -178,7 +177,7 @@ export function PaymentModal({
               <Button
                 variant={paymentMethod === "card" ? "default" : "outline"}
                 onClick={() => setPaymentMethod("card")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 transform-none hover:transform-none"
                 disabled
               >
                 <CreditCard className="h-4 w-4" />
@@ -190,7 +189,9 @@ export function PaymentModal({
             {paymentMethod === "cash" && (
               <div className="space-y-3">
                 <div>
-                  <Label htmlFor="cash-amount">Jumlah Uang Diterima</Label>
+                  <Label htmlFor="cash-amount" className="text-white">
+                    Jumlah Uang Diterima
+                  </Label>
                   <Input
                     id="cash-amount"
                     type="text"
@@ -207,7 +208,7 @@ export function PaymentModal({
                         setCashAmount(formattedValue);
                       }
                     }}
-                    className="mt-1"
+                    className="mt-1 transform-none hover:transform-none"
                   />
                 </div>
 
@@ -220,6 +221,7 @@ export function PaymentModal({
                     onClick={() =>
                       setCashAmount(`Rp ${finalTotal.toLocaleString()}`)
                     }
+                    className="transform-none hover:transform-none"
                   >
                     Pas
                   </Button>
@@ -228,10 +230,9 @@ export function PaymentModal({
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      setCashAmount(
-                        `Rp ${(100000).toLocaleString()}`
-                      )
+                      setCashAmount(`Rp ${(100000).toLocaleString()}`)
                     }
+                    className="transform-none hover:transform-none"
                   >
                     100k
                   </Button>
@@ -240,36 +241,38 @@ export function PaymentModal({
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      setCashAmount(
-                        `Rp ${(200000).toLocaleString()}`
-                      )
+                      setCashAmount(`Rp ${(200000).toLocaleString()}`)
                     }
+                    className="transform-none hover:transform-none"
                   >
                     200k
                   </Button>
                 </div>
                 {cashValue > 0 && (
-                  <div className="p-3 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between text-sm">
+                  <div className="p-3 glass-light rounded-lg">
+                    <div className="flex justify-between text-sm text-gray-200">
                       <span>Uang Diterima:</span>
                       <span>Rp {cashValue.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm text-gray-200">
                       <span>Total Bayar:</span>
                       <span>Rp {finalTotal.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between font-medium mt-1 pt-1 border-t">
+                    <div className="flex justify-between font-medium mt-1 pt-1 border-t border-white/20 text-white">
                       <span>Kembalian:</span>
                       <span
                         className={
-                          change >= 0 ? "text-green-600" : "text-red-600"
+                          change >= 0 ? "text-green-400" : "text-red-400"
                         }
                       >
                         Rp {change.toLocaleString()}
                       </span>
                     </div>
                     {change < 0 && (
-                      <Badge variant="destructive" className="text-xs mt-1">
+                      <Badge
+                        variant="destructive"
+                        className="text-xs mt-1 transform-none hover:transform-none"
+                      >
                         Uang tidak mencukupi
                       </Badge>
                     )}
@@ -280,9 +283,9 @@ export function PaymentModal({
 
             {/* Card Payment Details */}
             {paymentMethod === "card" && (
-              <div className="p-4 bg-blue-50 rounded-lg text-center">
-                <CreditCard className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                <p className="text-sm text-blue-700">
+              <div className="p-4 glass-light rounded-lg text-center">
+                <CreditCard className="h-8 w-8 mx-auto mb-2 text-white" />
+                <p className="text-sm text-gray-200">
                   Siapkan kartu untuk pembayaran
                 </p>
               </div>
@@ -291,13 +294,17 @@ export function PaymentModal({
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="transform-none hover:transform-none"
+          >
             Batal
           </Button>
           <Button
             onClick={handlePayment}
             disabled={!canProcessPayment() || isProcessing}
-            className="min-w-32"
+            className="min-w-32 transform-none hover:transform-none"
           >
             {isProcessing ? "Memproses..." : "Bayar Sekarang"}
           </Button>
