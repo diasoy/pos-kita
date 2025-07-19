@@ -8,10 +8,22 @@ import { Minus, Plus, Trash2, ShoppingCart, CreditCard } from "lucide-react";
 import { useCart } from "@/components/transaction/cart-context";
 import { ProductGrid } from "@/components/transaction/product-grid";
 import { PaymentModal } from "@/components/transaction/payment-modal";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const TransactionPage = () => {
   const { cartItems, updateQuantity, removeItem, clearCart, total } = useCart();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const tax = total * 0.1;
   const finalTotal = total + tax;
@@ -136,14 +148,40 @@ const TransactionPage = () => {
                 </div>
 
                 <div className="space-y-2 pt-2">
-                  <Button
-                    variant="outline"
-                    className="w-full transform-none hover:transform-none"
-                    size="sm"
-                    onClick={clearCart}
+                  <AlertDialog
+                    open={showClearDialog}
+                    onOpenChange={setShowClearDialog}
                   >
-                    Kosongkan Keranjang
-                  </Button>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full transform-none hover:transform-none"
+                        size="sm"
+                        onClick={() => setShowClearDialog(true)}
+                      >
+                        Kosongkan Keranjang
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Batalkan Pemesanan?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Semua item di keranjang akan dihapus. Lanjutkan?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            clearCart();
+                            setShowClearDialog(false);
+                          }}
+                        >
+                          Ya, kosongkan
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                   <Button
                     className="w-full py-5 transform-none hover:transform-none"
                     size="lg"

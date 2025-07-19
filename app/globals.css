@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 5%;
 
-    --primary: 0 0% 20%;
+    --primary: 32 100% 50%; /* orange-600 */
     --primary-foreground: 0 0% 98%;
 
     --secondary: 0 0% 92%;
@@ -50,7 +50,7 @@
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 0% 80%;
+    --primary: 32 100% 60%; /* orange-400 for dark mode */
     --primary-foreground: 0 0% 10%;
 
     --secondary: 0 0% 15%;
@@ -174,7 +174,6 @@
       box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-
   .dark .glass-strong {
     background: rgba(60, 60, 60, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -217,15 +216,7 @@
   }
 
   /* Dialog specific overrides */
-  [data-radix-popper-content-wrapper] {
-    position: fixed !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-  }
-
-  /* Ensure dialog content stays centered */
-  .dialog-centered {
+  /* .dialog-centered {
     position: fixed !important;
     left: 50% !important;
     top: 50% !important;
@@ -237,7 +228,7 @@
   .dialog-centered:focus,
   .dialog-centered:active {
     transform: translate(-50%, -50%) !important;
-  }
+  } */
   .glass-light {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);

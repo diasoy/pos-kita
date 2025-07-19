@@ -16,7 +16,6 @@ const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -52,7 +51,7 @@ const ThemeSwitcher = () => {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-content glass border-0" align="start">
+      <DropdownMenuContent>
         <DropdownMenuRadioGroup
           value={theme}
           onValueChange={(e) => setTheme(e)}

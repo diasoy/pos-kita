@@ -15,10 +15,14 @@ import {
   // History,
   // Settings,
   ShoppingCart,
+  CreditCard,
+  History,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import Image from "next/image";
+import { ThemeSwitcher } from "../theme-switcher";
+import { usePathname } from "next/navigation";
 
 interface Category {
   id: number;
@@ -49,6 +53,7 @@ export function ProductGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { addToCart, cartItems } = useCart();
+  const pathname = usePathname();
 
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -165,36 +170,61 @@ export function ProductGrid() {
               <nav className="flex items-center space-x-6 flex-1">
                 <Link
                   href="/"
-                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors
+                    ${
+                      pathname === "/"
+                        ? "text-orange-600 font-bold border-b-2 border-orange-600"
+                        : "hover:text-primary"
+                    }
+                  `}
                 >
                   <Home className="h-4 w-4" />
-                  Dashboard
-                </Link>
-                {/* <Link
-                  href="/product"
-                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
-                >
-                  <Package className="h-4 w-4" />
-                  Product
+                  Landing
                 </Link>
                 <Link
                   href="/transaction"
-                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors
+                    ${
+                      pathname === "/transaction"
+                        ? "text-orange-600 font-bold border-b-2 border-orange-600"
+                        : "hover:text-primary"
+                    }
+                  `}
                 >
-                  <History className="h-4 w-4" />
+                  <CreditCard className="h-4 w-4" />
                   Transaction
                 </Link>
                 <Link
-                  href="/settings"
-                  className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
+                  href="/history"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors
+                    ${
+                      pathname === "/history"
+                        ? "text-orange-600 font-bold border-b-2 border-orange-600"
+                        : "hover:text-primary"
+                    }
+                  `}
                 >
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </Link> */}
+                  <History className="h-4 w-4" />
+                  History
+                </Link>
+                <Link
+                  href="/product"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors
+                    ${
+                      pathname === "/product"
+                        ? "text-orange-600 font-bold border-b-2 border-orange-600"
+                        : "hover:text-primary"
+                    }
+                  `}
+                >
+                  <Package className="h-4 w-4" />
+                  Products
+                </Link>
               </nav>
             </div>
 
             <div className="hidden lg:flex items-center gap-4">
+              <ThemeSwitcher />
               {/* Cart Info */}
               <div className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
@@ -222,47 +252,67 @@ export function ProductGrid() {
 
           {/* Categories */}
           <div className="flex flex-wrap gap-2">
-            <Button
-              variant={selectedCategory === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory("all")}
-              className={`flex items-center gap-2 ${
-                selectedCategory === "all"
-                  ? "glass-strong"
-                  : "glass-light border-border"
-              }`}
-            >
-              Semua
-              <Badge
-                variant="secondary"
-                className="text-xs glass-light border-border bg-white dark:bg-gray-800"
-              >
-                {products.length}
-              </Badge>
-            </Button>
-            {categories.map((category) => (
+            <div className="flex flex-wrap gap-2">
               <Button
-                key={category.id}
-                variant={
-                  selectedCategory === category.id ? "default" : "outline"
-                }
+                variant={selectedCategory === "all" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 ${
-                  selectedCategory === category.id
-                    ? "glass-strong"
-                    : "glass-light border-border"
-                }`}
+                onClick={() => setSelectedCategory("all")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-all duration-200
+                  ${
+                    selectedCategory === "all"
+                      ? "bg-orange-600 text-white shadow-lg "
+                      : "bg-white dark:bg-gray-900 text-orange-600 border  hover:bg-orange-50 dark:hover:bg-orange-950"
+                  }
+                  hover:scale-105
+                `}
               >
-                {category.name}
+                Semua
                 <Badge
                   variant="secondary"
-                  className="text-xs glass-light border-border bg-white dark:bg-gray-800"
+                  className={`text-xs px-2 py-1 rounded-full ml-2 font-bold
+                    ${
+                      selectedCategory === "all"
+                        ? "bg-white text-orange-600 border border-orange-400"
+                        : "bg-orange-100 text-orange-600 border border-orange-200"
+                    }
+                  `}
                 >
-                  {getCategoryCount(category.id)}
+                  {products.length}
                 </Badge>
               </Button>
-            ))}
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={
+                    selectedCategory === category.id ? "default" : "outline"
+                  }
+                  size="sm"
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-all duration-200
+                    ${
+                      selectedCategory === category.id
+                        ? "bg-orange-600 text-white shadow-lg "
+                        : "bg-white dark:bg-gray-900 text-orange-600 border  hover:bg-orange-50 dark:hover:bg-orange-950"
+                    }
+                    hover:scale-105
+                  `}
+                >
+                  {category.name}
+                  <Badge
+                    variant="secondary"
+                    className={`text-xs px-2 py-1 rounded-full ml-2 font-bold
+                      ${
+                        selectedCategory === category.id
+                          ? "bg-white text-orange-600 border border-orange-400"
+                          : "bg-orange-100 text-orange-600 border border-orange-200"
+                      } 
+                    `}
+                  >
+                    {getCategoryCount(category.id)}
+                  </Badge>
+                </Button>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
